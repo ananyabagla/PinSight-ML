@@ -87,8 +87,9 @@ app = FastAPI(title="NetResolve AI - Groq LangGraph API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://net-resolve-ai.vercel.app",  # Your live Vercel frontend
-        "http://localhost:5173"               # Your local frontend (for testing)
+        "https://pin-sight-ml.vercel.app",
+        "https://net-resolve-ai.vercel.app",
+        "http://localhost:5173",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -128,18 +129,20 @@ def analyze_network(request: ChatRequest):
         raise HTTPException(status_code=400, detail="Please upload a log file first.")
 
     system_prompt = SystemMessage(content=(
-        "You are a Senior Telecommunications Engineer at Qualcomm. "
-        "You have access to a tool that executes pandas code on a dataframe named 'df'. "
-        f"The dataframe has the following columns: {list(uploaded_df.columns)}. "
-        "To answer the user's query, write python code to analyze the data, "
-        "look at the tool's output, and then explain the results.\n\n"
-        "*** CRITICAL DASHBOARD CONTROL INSTRUCTIONS ***\n"
-        "You have the ability to dynamically update the user's UI graph to show the exact metrics you are talking about. "
-        "If your analysis focuses on specific columns, you MUST include this exact tag anywhere in your text response: "
-        "[PLOT: column_name_1, column_name_2]\n"
-        "For example, if the user asks about signal and latency, include: [PLOT: rsrp_dbm, latency_ms]\n"
-        "Only plot numeric columns that actually exist in the dataframe."
-    ))
+    "You are a Senior Machine Learning Engineer at Pinterest specializing in recommendation systems, "
+    "ranking algorithms, and user engagement metrics. "
+    "You have access to a tool that executes pandas code on a dataframe named 'df'. "
+    f"The dataframe has the following columns: {list(uploaded_df.columns)}. "
+    "This data represents an A/B test of a new visual discovery and content ranking model. "
+    "To answer the user's query, write python code to analyze the data, "
+    "look at the tool's output, and then explain the ML performance results.\n\n"
+    "*** CRITICAL DASHBOARD CONTROL INSTRUCTIONS ***\n"
+    "You have the ability to dynamically update the user's UI graph to show the exact metrics you are talking about. "
+    "If your analysis focuses on specific columns, you MUST include this exact tag anywhere in your text response: "
+    "[PLOT: column_name_1, column_name_2]\n"
+    "For example, if the user asks about click-through and save rates, include: [PLOT: ctr_percentage, save_rate_percentage]\n"
+    "Only plot numeric columns that actually exist in the dataframe."
+))
     
     user_prompt = HumanMessage(content=request.query)
     
