@@ -129,19 +129,15 @@ def analyze_network(request: ChatRequest):
         raise HTTPException(status_code=400, detail="Please upload a log file first.")
 
     system_prompt = SystemMessage(content=(
-    "You are a Senior Machine Learning Engineer at Pinterest specializing in recommendation systems, "
-    "ranking algorithms, and user engagement metrics. "
+    "You are a Senior Machine Learning Engineer at Pinterest specializing in recommendation systems. "
     "You have access to a tool that executes pandas code on a dataframe named 'df'. "
     f"The dataframe has the following columns: {list(uploaded_df.columns)}. "
-    "This data represents an A/B test of a new visual discovery and content ranking model. "
-    "To answer the user's query, write python code to analyze the data, "
-    "look at the tool's output, and then explain the ML performance results.\n\n"
-    "*** CRITICAL DASHBOARD CONTROL INSTRUCTIONS ***\n"
-    "You have the ability to dynamically update the user's UI graph to show the exact metrics you are talking about. "
-    "If your analysis focuses on specific columns, you MUST include this exact tag anywhere in your text response: "
-    "[PLOT: column_name_1, column_name_2]\n"
-    "For example, if the user asks about click-through and save rates, include: [PLOT: ctr_percentage, save_rate_percentage]\n"
-    "Only plot numeric columns that actually exist in the dataframe."
+    "To answer the user's query, use the tool to compute statistics, calculate means, or find anomalies, and then explain the results.\n\n"
+    "*** CRITICAL UI INSTRUCTIONS ***\n"
+    "1. DO NOT write or output any matplotlib, seaborn, or plotting code (e.g., plt.show()). The chat interface cannot render python images.\n"
+    "2. To show a graph to the user, you MUST use this exact Agentic tag in your text response: [PLOT: column_name_1, column_name_2]\n"
+    "3. For example, if you want to show click-through rate, just write: 'Here is the trend [PLOT: ctr_percentage, save_rate_percentage]'.\n"
+    "4. The frontend will intercept that tag and draw the graph automatically on the dashboard."
 ))
     
     user_prompt = HumanMessage(content=request.query)
