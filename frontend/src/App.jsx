@@ -27,12 +27,12 @@ export default function App() {
     setFileStatus(`Uploading ${file.name}...`);
 
     try {
-      await axios.post('https://pinsight-ml.onrender.com//api/upload', formData, {
+      await axios.post('https://pinsight-ml.onrender.com/api/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setFileStatus(`${file.name} loaded successfully.`);
       
-      const res = await axios.get('https://pinsight-ml.onrender.com//api/telemetry');
+      const res = await axios.get('https://pinsight-ml.onrender.com/api/telemetry');
       setData(res.data);
       
       if (res.data.length > 0) {
@@ -57,7 +57,7 @@ export default function App() {
     setLoading(true);
 
     try {
-      const response = await axios.post('https://pinsight-ml.onrender.com//api/chat', { query: userMessage.text });
+      const response = await axios.post('https://pinsight-ml.onrender.com/api/chat' , { query: userMessage.text });
       let aiText = response.data.response;
 
       const plotMatch = aiText.match(/\[PLOT:\s*(.+?)\]/i);
